@@ -1,0 +1,4 @@
+site_name: telescope
+theme: gitbooks
+nav:
+  - 'quickstart': 'quickstart.md'

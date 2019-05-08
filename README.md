@@ -1,4 +1,3 @@
-telescope
+# telescope
 
-An app for capturing knowledge distributed across Jupyter notebooks
-.
+Improving knowledge capture and discovery across Jupyter notebooks.
