@@ -1,28 +1,29 @@
 """telescope
 
-Usage: telescope [--render=<render_type>] <dir>
+Usage: telescope [--navigation --highlights --render=<render_type>] <src> <dest>
 
 Options:
-    --render=<render_type>  What format telescope compiles results to [default: app].
-
+    --render=<render_type>  How should results be rendered? [default: app].
+    --navigation Add markdown cell with navigation links to top of notebooks?
+    --highlights Add markdown cell with highlights to top of notebooks?
 """
 
 import sys
 import logging
+from logging.handlers import TimedRotatingFileHandler
 from docopt import docopt
+import telescope
 
 if __name__ == "__main__":
 
     # Logging config
-    args = docopt(__doc__)
-    print(args)
-    # Setup logging
     STDOUT_LEVEL = logging.DEBUG
     FILE_LEVEL = logging.DEBUG
-    FORMAT_STRING = '%(asctime)s %(levelname)s %(module)s %(funcName)s :: %(message)s'
+    FORMAT_STRING = '%(asctime)s %(levelname)s %(module)s %(funcName)s :: %(' \
+                    'message)s '
 
     # Logging to file
-    fh = logging.FileHandler(args['<dir>'] + "log.log")
+    fh = TimedRotatingFileHandler("log.log", when="midnight", interval=1)
     fh.setLevel(FILE_LEVEL)
     fh.setFormatter(logging.Formatter(FORMAT_STRING))
 
@@ -32,10 +33,51 @@ if __name__ == "__main__":
     sh.setFormatter(logging.Formatter(FORMAT_STRING))
 
     log = logging.getLogger()
-    log.setLevel(logging.NOTSET)
+    log.setLevel(STDOUT_LEVEL)
     log.addHandler(fh)
     log.addHandler(sh)
-    print(args)
 
     # CLI implementation
-	# TODO
+    args = docopt(__doc__)
+    log.debug(args)
+
+    # DETERMINE PROCESSORS
+
+    # Which processors and in what order
+    # processors = []
+    #
+    # optional_processors = {
+    #     args['--navigation']: telescope.NavigationProcessor(),
+    #     args['--highlights']: telescope.HighlightsProcessor(),
+    # }
+    #
+    # for k, v in optional_processors:
+    #     if k:
+    #         processors.append(v)
+    #
+    # # Assume user always wants QA pair extraction and rendering
+    # processors.append(telescope.QAPairProcessor())
+
+    # TODO
+    processors = [
+        telescope.NavigationProcessor()
+    ]
+
+    # ASSEMBLE PIPELINE
+
+    pipeline = telescope.Pipeline(processors)
+
+    # IDENTIFY NOTEBOOKS TO PROCESS
+
+    notebooks = telescope.notebooks.paths(args['<src>'])
+
+    # EXECUTE PIPELINE
+
+    pipeline.fit(notebooks)
+
+    # # RENDER
+    #
+    # pipeline.render(
+    #     render=args['--render'],
+    #     dest=args['--dest']
+    # )

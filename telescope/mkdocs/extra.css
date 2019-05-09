@@ -1,0 +1,34 @@
+/* Replace the default logo */
+.md-icon--home:before {
+    content: "panorama_fish_eye";
+}
+
+/* Hide the table-of-contents */
+.md-sidebar--secondary {
+    display: none
+}
+
+/* Have content utilized the real-estate freed up by removing the table-of-contents */
+@media only screen and (min-width: 60em) {
+    .md-content {
+        margin-right: 0;
+    }
+}
+
+/* Make sure wide content (e.g. long code-cell lines and large tables) aren't cut off*/
+.md-content__inner {
+    overflow-x: scroll;
+}
+/*.md-typeset .md-typeset__table table {
+    overflow-x: scroll;
+}*/
+
+.dataframe {
+    all: inherit;
+}
+
+/* Override table-header styling that makes indices look terrible when rendering
+   Pandas dataframe tables from source notebooks */
+.md-typeset table:not([class]) th {
+    min-width: 0;
+}
