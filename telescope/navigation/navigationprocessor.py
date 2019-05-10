@@ -11,6 +11,8 @@ log = logging.getLogger()
 
 class NavigationProcessor(ProcessorInterface):
 
+    NAVTAG = "<telescope-nav></telescope-nav>"
+
     def __init__(self, name="navigation"):
         super().__init__(name)
 
@@ -20,8 +22,9 @@ class NavigationProcessor(ProcessorInterface):
         # TODO implement limited heading depth
         """
         navsection = [
-            '<a name="top"></a>\n',  # Allows generation of "back to top" links
-            '## Navigation\n',  # Beginning of navigation section
+            self.NAVTAG, # Allows for detecting preexisting nav section
+            '<a name="top">*Back to top*</a>\n',
+            '## Navigation\n',
             '\n'
         ]
         for cell in notebook.node['cells']:
@@ -61,6 +64,7 @@ class NavigationProcessor(ProcessorInterface):
         # Insert navigation section into notebook as first markdown cell
         # TODO implement more sophisticated handling of where to insert nav
         # e.g. detect and put after title/intro
+        # e.g. detect existing navigation cell and overwrite it (upstream?)
         notebook.node['cells'].insert(0, nav_cell)
         log.warning("Overwriting notebook {}".format(notebook.source_path))
         notebooks.dump(notebook, notebook.source_path)
