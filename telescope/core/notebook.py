@@ -1,6 +1,6 @@
 import logging
 from ..utils import notebooks
-from ..core.interfaces.processor import ProcessorInterface
+from .processorinterface import ProcessorInterface
 from typing import Any
 
 

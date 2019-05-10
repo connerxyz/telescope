@@ -15,3 +15,4 @@ def navlink(hlevel, htext, fragid):
 
 def anchorlink(fragid):
     return '<a name="' + fragid + '"></a>\n'
+

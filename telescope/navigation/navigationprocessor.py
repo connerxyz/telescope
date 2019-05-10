@@ -1,8 +1,9 @@
-from ..core.interfaces import ProcessorInterface
+from ..core import ProcessorInterface
 from ..core import Notebook
 from ..utils import notebooks
 from .utils import *
 from copy import deepcopy
+from typing import Any
 import logging
 
 log = logging.getLogger()
@@ -15,7 +16,7 @@ class NavigationProcessor(ProcessorInterface):
 
     def transform(self, notebook: Notebook, *args, **kwargs) -> Notebook:
         """
-        Apply this processor's transformation to given notebook.
+        Generate navigation section for given notebook.
         # TODO implement limited heading depth
         """
         navsection = [
@@ -39,14 +40,27 @@ class NavigationProcessor(ProcessorInterface):
                         # Insert anchor just before current line in source copy
                         scp.insert(i, anchorlink(fragid))
                 # Overwrite the cell's source with the transformed source
+                # TODO can/should transform have no side-effects on notebooks?
+                # i.e. it would be cleaner if all changes to notebooks occurred
+                # in render, and transform could guarantee no side-effects.
                 cell['source'] = "\n".join(scp)
         notebook.set_processor_results(self, navsection)
         log.debug(navsection)
         return notebook
 
-    def render(self, notebook: Notebook) -> Notebook:
+    def render(self, notebook: Notebook) -> Any:
         """
-        Apply processor's rendering for to/for given notebook.
+        Insert navigation section into notebook
         """
-
-        pass
+        # Create markdown cell for navigation section
+        nav_cell = {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": notebook.get_processor_results(self)
+        }
+        # Insert navigation section into notebook as first markdown cell
+        # TODO implement more sophisticated handling of where to insert nav
+        # e.g. detect and put after title/intro
+        notebook.node['cells'].insert(0, nav_cell)
+        log.warning("Overwriting notebook {}".format(notebook.source_path))
+        notebooks.dump(notebook, notebook.source_path)

@@ -1,3 +1,4 @@
+import json
 import logging
 import re
 import nbformat
@@ -8,7 +9,9 @@ log = logging.getLogger()
 
 def paths(directory):
     """Locate relevant .ipynb files in given directory"""
-    results = glob.glob(directory + "/*.ipynb")
+    pattern = directory + "/*.ipynb"
+    log.debug(pattern)
+    results = glob.glob(pattern)
     log.debug("{} notebook paths".format(len(results)))
     return results
 
@@ -74,3 +77,18 @@ def headinglevel(heading):
     while heading[result] == '#':
         result += 1
     return result
+
+
+def dump(notebook, path: str) -> None:
+    """
+    Write notebook object to disk as JSON, i.e. .ipynb
+
+    :param notebook: The notebook to write.
+    :type notebook: telescope.Notebook
+    :param path: Where to write notebook.
+    :type path: str
+    :return: None
+    :rtype: None
+    """
+    with open(path, "w") as f:
+        json.dump(notebook.node, f)

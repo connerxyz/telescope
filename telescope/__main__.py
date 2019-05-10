@@ -58,22 +58,25 @@ if __name__ == "__main__":
     # # Assume user always wants QA pair extraction and rendering
     # processors.append(telescope.QAPairProcessor())
 
-    # TODO
+    # TODO just develop the nav processor for now.
     processors = [
         telescope.NavigationProcessor()
     ]
 
     # ASSEMBLE PIPELINE
-
     pipeline = telescope.Pipeline(processors)
 
     # IDENTIFY NOTEBOOKS TO PROCESS
-
     notebooks = telescope.notebooks.paths(args['<src>'])
 
     # EXECUTE PIPELINE
-
     pipeline.transform(notebooks)
+
+    # RENDER
+    pipeline.render()
+
+    # ALTERNATIVELY YOU CAN CHAIN
+    # pipeline.transform(notebooks).render()
 
     # # RENDER
     #
@@ -81,3 +84,10 @@ if __name__ == "__main__":
     #     render=args['--render'],
     #     dest=args['--dest']
     # )
+
+    # ALTERNATIVE TO ABOVE...
+    # pipeline = telescope.Pipeline(
+    #     processors,
+    #     notebooks
+    # )
+    # pipeline.render()

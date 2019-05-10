@@ -1,4 +1,7 @@
-from .interfaces.pipeline import PipelineInterface
+from .pipelineinterface import PipelineInterface
+import logging
+
+log = logging.getLogger()
 
 
 class Pipeline(PipelineInterface):
@@ -7,7 +10,4 @@ class Pipeline(PipelineInterface):
         super().transform(notebooks, *args, **kwargs)
 
     def render(self):
-        """
-        Sequentially execute processors' rendering routines
-        """
-        pass
+        super().render()
