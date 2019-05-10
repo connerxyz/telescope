@@ -1,4 +1,5 @@
 from ..core.interfaces import ProcessorInterface
+from ..core import Notebook
 from ..utils import notebooks
 from .utils import *
 from copy import deepcopy
@@ -12,16 +13,10 @@ class NavigationProcessor(ProcessorInterface):
     def __init__(self, name="navigation"):
         super().__init__(name)
 
-    def transform(self, notebook, *args, **kwargs):
+    def transform(self, notebook: Notebook, *args, **kwargs) -> Notebook:
         """
         Apply this processor's transformation to given notebook.
-
         # TODO implement limited heading depth
-
-        :param notebook: The notebook to apply transformation to
-        :type notebook: telescope.Notebook
-        :return: A transformed notebook
-        :rtype: telescope.Notebook
         """
         navsection = [
             '<a name="top"></a>\n',  # Allows generation of "back to top" links
@@ -45,6 +40,13 @@ class NavigationProcessor(ProcessorInterface):
                         scp.insert(i, anchorlink(fragid))
                 # Overwrite the cell's source with the transformed source
                 cell['source'] = "\n".join(scp)
-        notebook.transformations[self.name] = navsection
+        notebook.set_processor_results(self, navsection)
         log.debug(navsection)
         return notebook
+
+    def render(self, notebook: Notebook) -> Notebook:
+        """
+        Apply processor's rendering for to/for given notebook.
+        """
+
+        pass

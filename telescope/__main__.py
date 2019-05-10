@@ -73,7 +73,7 @@ if __name__ == "__main__":
 
     # EXECUTE PIPELINE
 
-    pipeline.fit(notebooks)
+    pipeline.transform(notebooks)
 
     # # RENDER
     #

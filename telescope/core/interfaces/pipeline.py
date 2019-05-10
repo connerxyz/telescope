@@ -11,7 +11,7 @@ class PipelineInterface:
         self.pipeline = pipeline
 
     @abstractmethod
-    def fit(self, notebooks, *args, **kwargs):
+    def transform(self, notebooks, *args, **kwargs):
         """
         Sequentially execute processors in the pipeline on the give notebooks
 
