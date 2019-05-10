@@ -16,10 +16,9 @@ class NavigationProcessor(ProcessorInterface):
     def __init__(self, name="navigation"):
         super().__init__(name)
 
-    def transform(self, notebook: Notebook, *args, **kwargs) -> Notebook:
+    def transform(self, notebook: Notebook, depth=3, *args, **kwargs) -> Notebook:
         """
         Generate navigation section for given notebook.
-        # TODO implement limited heading depth
         """
         navsection = [
             self.NAVTAG, # Allows for detecting preexisting nav section
@@ -37,11 +36,12 @@ class NavigationProcessor(ProcessorInterface):
                     # Look for headings in markdown cells
                     if line.startswith("#"):
                         hlevel = notebooks.headinglevel(line)
-                        fragid = notebooks.fragmentid(line)
-                        # Map heading into navsection
-                        navsection.append(navlink(hlevel, line, fragid))
-                        # Insert anchor just before current line in source copy
-                        scp.insert(i, anchorlink(fragid))
+                        if hlevel <= depth:
+                            fragid = notebooks.fragmentid(line)
+                            # Map heading into navsection
+                            navsection.append(navlink(hlevel, line, fragid))
+                            # Insert anchor just before current line in source copy
+                            scp.insert(i, anchorlink(fragid))
                 # Overwrite the cell's source with the transformed source
                 # TODO can/should transform have no side-effects on notebooks?
                 # i.e. it would be cleaner if all changes to notebooks occurred
