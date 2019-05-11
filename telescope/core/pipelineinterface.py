@@ -50,7 +50,16 @@ class PipelineInterface:
         """
         Sequentially execute processors' rendering routines
         """
-        for notebook in self.notebooks:
-            for processor in self.pipeline:
-                log.debug("{} processor".format(processor.name))
+        # Employ each processor to render each notebook
+        for processor in self.pipeline:
+            for notebook in self.notebooks:
+                log.debug("applying {} processor to {}".format(
+                    processor.name,
+                    notebook.source_path
+                ))
                 processor.render(notebook)
+        # Employ the processor's aggregate renderer
+        for processor in self.pipeline:
+            log.debug("applying aggregator")
+            processor.aggregate(self.notebooks)
+

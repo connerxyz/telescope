@@ -17,14 +17,18 @@ class Notebook(object):
         self.node = notebooks.load(path)
         self.__processor_results = {}
 
-    def set_processor_results(self, processor: ProcessorInterface, results) -> None:
+    def set_processor_result(self, processor: ProcessorInterface, results) -> None:
         """
         Embed the given processor's results within this notebook instance
         """
         self.__processor_results[processor.name] = results
 
-    def get_processor_results(self, processor: ProcessorInterface) -> Any:
+    def get_processor_result(self, processor: ProcessorInterface) -> Any:
         """
         Extract the given processor's results from this notebook instance
         """
         return self.__processor_results[processor.name]
+
+    def to_html(self):
+        #TODO
+        pass

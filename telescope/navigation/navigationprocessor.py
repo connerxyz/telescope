@@ -5,6 +5,7 @@ from .utils import *
 from copy import deepcopy
 from typing import Any
 import logging
+from .tocaggregator import TableOfContentsAggregator
 
 log = logging.getLogger()
 
@@ -14,8 +15,11 @@ class NavigationProcessor(ProcessorInterface):
     NAVNAME="nav"
     TOPLINK = '<a href="#{}">*back to top*</a>\n'.format(NAVNAME)
 
-    def __init__(self, name="navigation"):
-        super().__init__(name)
+    def __init__(self, name="navigation", aggregator=None):
+        # Provide a default aggregator
+        if aggregator is None:
+            aggregator = TableOfContentsAggregator(parent=self)
+        super().__init__(name, aggregator)
 
     def transform(self, notebook: Notebook, depth=3, back_to_top=True,
                   *args, **kwargs) -> Notebook:
@@ -51,7 +55,7 @@ class NavigationProcessor(ProcessorInterface):
                 # i.e. it would be cleaner if all changes to notebooks occurred
                 # in render, and transform could guarantee no side-effects.
                 cell['source'] = "\n".join(scp)
-        notebook.set_processor_results(self, navsection)
+        notebook.set_processor_result(self, navsection)
         log.debug(navsection)
         return notebook
 
@@ -63,7 +67,7 @@ class NavigationProcessor(ProcessorInterface):
         nav_cell = {
             "cell_type": "markdown",
             "metadata": {},
-            "source": notebook.get_processor_results(self)
+            "source": notebook.get_processor_result(self)
         }
         # Insert navigation section into notebook as first markdown cell
         # TODO implement more sophisticated handling of where to insert nav

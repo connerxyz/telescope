@@ -9,5 +9,6 @@ class Pipeline(PipelineInterface):
     def transform(self, notebooks, *args, **kwargs):
         super().transform(notebooks, *args, **kwargs)
 
-    def render(self):
+    def render(self, dest=None):
+        # TODO implement dest
         super().render()
