@@ -1,10 +1,11 @@
+from ..core import AggregatorInterface
 import markdown
 import logging
 
 log = logging.getLogger()
 
 
-class TableOfContentsAggregator:
+class TableOfContentsAggregator(AggregatorInterface):
 
     # TODO Inherit from aggregator
 
@@ -28,6 +29,8 @@ class TableOfContentsAggregator:
                 notebook.source_path,
                 "".join(notebook.get_processor_result(self.parent))
             )
+        # TODO establish dest
+        # TODO ensure TOC links work
         # Write the results to HTML
         path = "./table-of-contents.html"
         with open(path, "w") as f:

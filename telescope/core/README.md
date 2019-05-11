@@ -6,7 +6,29 @@ All the primitives necessary for implementing a notebook service processing pipe
 
 ### CORE OBJECTS PROVIDE DEFAULT IMPLEMENTATIONS
 
+## interfaces
+
+- Interfaces specify which methods are necessary for the architecture patterns employed by the framework to work.
+- Interfaces may also provide default implementations.
+
+## core objects
+
+### `Pipeline`
+
+- Inherits from `PipelineInterface`
+- Provides a default implementation of `PipelineInteface`
+
+### `Notebook`
+
+- A "business object" for facilitating processing and aggregating with Jupyter notebooks.
+- All pipelines, processors, and aggregators operate on `Notebook` instances.
+
+---
+
 ## `interfaces`
+
+- Interfaces specify which methods are necessary
+- They may also provide default implementations.
 
 This module contains abstract classes used to declare abstract interfaces. 
 This is about designing effective `core` primitives: demarcating abstraction layers, 
